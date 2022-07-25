@@ -15,11 +15,12 @@
 # 2022-07-25	WH	Module receives data from a single client and plays it out loud directly from the queue
 # ---------------------------------------------------------------------#
 # Imports modules
-import sys
-import queue
-import websockets
 import asyncio
+import queue
+import sys
+
 import sounddevice as sd
+import websockets
 
 # Program settings
 BUFFER_SIZE = 80  # Max length of outgoing_queue

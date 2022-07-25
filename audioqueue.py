@@ -16,9 +16,10 @@
 # 2022-07-23	WH	Converted to async function
 # 2022-07-23	WH	System can successfully record audio samples to and from a queue
 # ---------------------------------------------------------------------#
-import sys
-import queue
 import asyncio
+import queue
+import sys
+
 import sounddevice as sd
 
 FILENAME = "test.wav"
