@@ -1,4 +1,4 @@
-#---------------------------------------------------------------------#
+# ---------------------------------------------------------------------#
 # File: /client.py
 # Project: https://github.com/Lime-Parallelogram/cj2022-stately-satyrs
 # Created Date: Saturday, July 23rd 2022, 4:13:02 pm
@@ -12,14 +12,13 @@
 # HISTORY:
 # Date      	By	Comments
 # ----------	---	---------------------------------------------------------
+# 2022-07-25	WH	Made flake8 compliant
 # 2022-07-23	WH	Converted to async function
 # 2022-07-23	WH	System can successfully record audio samples to and from a queue
-#---------------------------------------------------------------------#
+# ---------------------------------------------------------------------#
 import sys
 import queue
-import threading
 import asyncio
-
 import sounddevice as sd
 
 FILENAME = "test.wav"
@@ -31,6 +30,7 @@ DEVICE = "default"
 
 q = queue.Queue(maxsize=BUFFER_SIZE)
 
+
 async def record_buffer():
     """
     Fill up a buffer queue with recorded sound
@@ -41,20 +41,21 @@ async def record_buffer():
 
     def callback(indata, frame_count, time_info, status):
         nonlocal blx_buffered
-        
+
         # Once the buffer is full, stop
         if blx_buffered == BUFFER_SIZE:
             loop.call_soon_threadsafe(event.set)
             raise sd.CallbackStop
-        
+
         q.put_nowait(bytes(indata))
         print("Samples Recorded: ", q.qsize())
         blx_buffered += 1
 
-    stream = sd.RawInputStream(samplerate=SAMPLE_RATE, blocksize=BLOCK_SIZE, callback=callback, dtype="float32", device=DEVICE,
-                            channels=CHANNELS)
+    stream = sd.RawInputStream(samplerate=SAMPLE_RATE, blocksize=BLOCK_SIZE, callback=callback, dtype="float32",
+                               device=DEVICE, channels=CHANNELS)
     with stream:
         await event.wait()  # Wait until recording is finished
+
 
 async def play_buffer():
     event = asyncio.Event()
@@ -73,7 +74,7 @@ async def play_buffer():
         except queue.Empty as e:
             print('Buffer is empty: increase buffersize?', file=sys.stderr)
             raise sd.CallbackAbort from e
-            
+
         if len(data) < len(outdata):
             outdata[:len(data)] = data
             outdata[len(data):] = b'\x00' * (len(outdata) - len(data))
@@ -86,9 +87,10 @@ async def play_buffer():
         samplerate=SAMPLE_RATE, blocksize=BLOCK_SIZE,
         device=DEVICE, channels=CHANNELS, dtype='float32',
         callback=callback, finished_callback=event.set)
-        
+
     with stream:
         await event.wait()  # Wait until playback is finished
+
 
 async def main():
     await record_buffer()
@@ -100,10 +102,3 @@ if __name__ == "__main__":
         asyncio.run(main())
     except KeyboardInterrupt:
         sys.exit('\nInterrupted by user')
-
-# async def hello(uri):
-    # async with connect(uri) as websocket:
-        # await websocket.send(sound())
-        # print(await websocket.recv())
-
-# asyncio.run(hello("ws://localhost:8765"))
