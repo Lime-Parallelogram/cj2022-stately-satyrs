@@ -34,9 +34,7 @@ incoming_queue = queue.Queue(maxsize=BUFFER_SIZE)
 
 
 async def play_buffer():
-    """
-    Play audio from the incoming queue using the sounddevice module
-    """
+    """Play audio from the incoming queue using the sounddevice module"""
     event = asyncio.Event()
     loop = asyncio.get_event_loop()
 
@@ -71,9 +69,7 @@ async def play_buffer():
 
 
 async def add_que(websocket):
-    """
-    Add incoming audio to playback queue
-    """
+    """Add incoming audio to playback queue"""
     global playback_started
 
     async for message in websocket:
@@ -91,9 +87,7 @@ async def add_que(websocket):
 
 
 async def main():
-    """
-    Main Event loop
-    """
+    """Main Event loop"""
     print("Starting server")
     async with websockets.serve(add_que, "0.0.0.0", 8765):
         await asyncio.Future()

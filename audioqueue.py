@@ -32,9 +32,7 @@ q = queue.Queue(maxsize=BUFFER_SIZE)
 
 
 async def record_buffer():
-    """
-    Fill up a buffer queue with recorded sound
-    """
+    """Fill up a buffer queue with recorded sound"""
     loop = asyncio.get_event_loop()
     event = asyncio.Event()
     blx_buffered = 0
@@ -58,6 +56,7 @@ async def record_buffer():
 
 
 async def play_buffer():
+    """Pop data from queue and play with sounddevice"""
     event = asyncio.Event()
     loop = asyncio.get_event_loop()
 
@@ -93,6 +92,7 @@ async def play_buffer():
 
 
 async def main():
+    """Run main event loop"""
     await record_buffer()
     await play_buffer()
 

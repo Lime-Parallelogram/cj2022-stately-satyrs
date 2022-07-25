@@ -33,9 +33,7 @@ outgoing_queue = queue.Queue(maxsize=BUFFER_SIZE)
 
 
 async def record_buffer(websocket):
-    """
-    Capture microphone audio into buffer queue
-    """
+    """Capture microphone audio into buffer queue"""
     event = asyncio.Event()
 
     def callback(indata, frame_count, time_info, status):
@@ -70,9 +68,7 @@ async def record_buffer(websocket):
 
 
 async def main():
-    """
-    Main event loop runs client
-    """
+    """Main event loop runs client"""
     async with websockets.connect("ws://192.168.2.68:8765") as websocket:
         await record_buffer(websocket)
 
