@@ -11,3 +11,4 @@ flake8-docstrings~=1.6.0
 # Our modules
 websockets
 sounddevice
+Django~=4.0.6
