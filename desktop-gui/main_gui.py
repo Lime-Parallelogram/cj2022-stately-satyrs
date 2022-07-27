@@ -28,7 +28,6 @@ class Window(QMainWindow):
 
     def _createMenuBar(self: Any) -> None:
         """Creation of Menu bar is done here, Actions created added here"""
-
         menuBar = self.menuBar()
 
         # File menu - New, Open, Save, Exit
