@@ -71,6 +71,7 @@ async def record_buffer(websocket):
 
 
 async def send_user_info(websocket):
+    """Sends the user data collected from the client to the server in the form of a json string """
     user_info = json.dumps(util.get_info())
     await websocket.send(user_info)
 
