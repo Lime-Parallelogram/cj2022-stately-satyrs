@@ -1,5 +1,6 @@
-import speech_recognition as sr
 from http.client import RemoteDisconnected
+
+import speech_recognition as sr
 
 recognizer = sr.Recognizer()
 recognizer.energy_threshold = 300

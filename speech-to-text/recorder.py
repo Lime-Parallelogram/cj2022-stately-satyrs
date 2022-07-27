@@ -1,6 +1,7 @@
-import pyaudio
-import wave
 import pathlib
+import wave
+
+import pyaudio
 import speechToTextpy
 
 p = pyaudio.PyAudio()
