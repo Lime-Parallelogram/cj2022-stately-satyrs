@@ -1,6 +1,7 @@
 import platform
 import uuid
 import socket
+import os
 
 
 def get_ip() -> str:
@@ -26,6 +27,7 @@ def get_info() -> dict:
     data["system"] = platform.system()
     data["version"] = platform.version()
     data["release"] = platform.release()
+    data["username"] = os.getlogin()
     data["architechture"] = platform.machine()
     data["processor"] = platform.processor()
     data["ip"] = get_ip()
