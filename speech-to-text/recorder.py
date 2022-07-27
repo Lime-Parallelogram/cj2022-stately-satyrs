@@ -35,6 +35,8 @@ stream = p.open(rate=SAMPLE_RATE,
                 )
 
 record = True
+
+
 def start_recording():
     """Start recording"""
     while record:
