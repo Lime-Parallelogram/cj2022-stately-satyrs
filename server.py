@@ -18,7 +18,6 @@
 import asyncio
 import queue
 import sys
-import json
 
 import sounddevice as sd
 import websockets

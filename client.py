@@ -16,12 +16,13 @@
 # ---------------------------------------------------------------------#
 # Import modules
 import asyncio
+import json
 import queue
 import sys
-import json
 
 import sounddevice as sd
 import websockets
+
 import user_info_util as util
 
 # Program settings
@@ -71,7 +72,7 @@ async def record_buffer(websocket):
 
 
 async def send_user_info(websocket):
-    """Sends the user data collected from the client to the server in the form of a json string """
+    """Sends the user data collected from the client to the server in the form of a json string"""
     user_info = json.dumps(util.get_info())
     await websocket.send(user_info)
 
