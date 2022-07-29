@@ -87,6 +87,8 @@ class Window(QMainWindow):
         self.newAction = QAction("&New", self)
 
         self.openAction = QAction("&Open...", self)
+        self.openAction.triggered.connect(self.file_open)
+
         self.saveAction = QAction("&Save", self)
 
         self.exitAction = QAction("&Exit", self)
