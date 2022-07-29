@@ -87,6 +87,8 @@ class Window(QMainWindow):
         self.newAction = QAction("&New", self)
 
         self.openAction = QAction("&Open...", self)
+        self.openAction.triggered.connect(self.file_open)
+
         self.saveAction = QAction("&Save", self)
 
         self.exitAction = QAction("&Exit", self)
@@ -108,6 +110,20 @@ class Window(QMainWindow):
     def micFunction(self: Any) -> None:
         """Function for Microphone dictation"""
         pass
+
+    def file_open(self: Any) -> None:
+        """Opens files via a dialog box"""
+        path, _ = QFileDialog.getOpenFileName(self, "Open file", "", "Text files (*.txt);All files (*.*)")
+
+        if path:
+            try:
+                with open(path, 'rU') as file:
+                    text = file.read()
+            except Exception as e:
+                self.dialog_critical(str(e))
+            else:
+                self.path = path
+                self.editor.setPlainText(text)
 
 
 if __name__ == "__main__":
