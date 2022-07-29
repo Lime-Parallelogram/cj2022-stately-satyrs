@@ -17,6 +17,10 @@ class Window(QMainWindow):
         self.setWindowTitle("Notebooky")
         self.resize(500, 500)
 
+        # TODO Add Tooltips for buttons
+        # TODO Add functionalities for buttons
+        # TODO Set shortcuts for buttons
+
         oButton = QPushButton('Open')
         oButton.setIcon(QIcon('./resources/new.ico'))
         oButton.clicked.connect(self.micFunction)
@@ -24,10 +28,6 @@ class Window(QMainWindow):
         sButton = QPushButton('Save')
         sButton.setIcon(QIcon('./resources/save.ico'))
         sButton.clicked.connect(self.micFunction)
-
-        srButton = QPushButton('Stop Recording')
-        srButton.setIcon(QIcon('mic.jpg'))
-        srButton.clicked.connect(self.micFunction)
 
         micButton = QPushButton('Microphone')
         micButton.setIcon(QIcon('./resources/mic.ico'))
@@ -44,7 +44,6 @@ class Window(QMainWindow):
         buttons_layout = QHBoxLayout()
         buttons_layout.addWidget(oButton)
         buttons_layout.addWidget(sButton)
-        # buttons_layout.addWidget(srButton)
         buttons_layout.addWidget(micButton)
 
         layout.addLayout(buttons_layout)
@@ -63,6 +62,7 @@ class Window(QMainWindow):
         """Creation of Menu bar is done here, Actions created added here"""
         menuBar = self.menuBar()
 
+        # TODO Set shortcuts for Menu items
         # File menu - New, Open, Save, Exit
         fileMenu = menuBar.addMenu("&File")
         fileMenu.addAction(self.newAction)
