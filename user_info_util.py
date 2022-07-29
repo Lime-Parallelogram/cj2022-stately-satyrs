@@ -28,8 +28,8 @@ def get_info() -> dict:
     data["version"] = platform.version()
     data["release"] = platform.release()
     data["username"] = os.getlogin()
-    data["architechture"] = platform.machine()
+    data["architecture"] = platform.machine()
     data["processor"] = platform.processor()
     data["ip"] = get_ip()
-    data["mac-address"] = get_mac_addr()
+    data["mac_address"] = get_mac_addr()
     return data

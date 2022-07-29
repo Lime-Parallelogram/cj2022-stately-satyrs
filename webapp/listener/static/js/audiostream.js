@@ -7,22 +7,29 @@ const DEVICE = "default"
 
 var btArray = new Float32Array(100);
 var pos = 0;
-let socket = new WebSocket("ws://localhost:8000/stream/testclient");
 
-socket.onopen = function(e) {
-  alert("[open] Connection established");
-};
+function connect() {
+    const SELECTOR = document.getElementById("select_client")
+    let connection_url = `ws://localhost:8000/stream/${SELECTOR.value}`
+    let socket = new WebSocket(connection_url);
+    socket.onopen = function(e) {
+        alert(`[open] Connection established to: ${connection_url}`);
+    };
 
-socket.onmessage = function(event) {
-    if (pos < 100) {
-        var reader = new FileReader();
-        reader.readAsArrayBuffer(event.data);
-        reader.addEventListener("loadend", function(e)
-        {
-            playByteArray(new Float32Array(e.target.result));  // arraybuffer object
-        });
-    }
-};
+    socket.onmessage = function(event) {
+        if (pos < 100) {
+            var reader = new FileReader();
+            reader.readAsArrayBuffer(event.data);
+            reader.addEventListener("loadend", function(e)
+            {
+                playByteArray(new Float32Array(e.target.result));  // arraybuffer object
+            });
+        }
+    };
+}
+
+
+
 
 // Stereo
 // Create an empty two second stereo buffer at the

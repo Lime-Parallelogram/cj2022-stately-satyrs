@@ -3,7 +3,7 @@ from typing import Any
 
 from PyQt5.QtGui import QFontDatabase, QIcon
 from PyQt5.QtWidgets import (
-    QAction, QApplication, QFileDialog, QHBoxLayout, QMainWindow,
+    QAction, QApplication, QFileDialog, QHBoxLayout, QMainWindow, QMessageBox,
     QPlainTextEdit, QPushButton, QVBoxLayout, QWidget
 )
 
@@ -23,17 +23,17 @@ class Window(QMainWindow):
 
         oButton = QPushButton('Open')
         oButton.setIcon(QIcon('./resources/new.ico'))
-        oButton.clicked.connect(self.micFunction)
+        oButton.clicked.connect(self.file_open)
 
         sButton = QPushButton('Save')
         sButton.setIcon(QIcon('./resources/save.ico'))
-        sButton.clicked.connect(self.micFunction)
+        sButton.clicked.connect(self.file_save)
 
-        micButton = QPushButton('Microphone')
-        micButton.setIcon(QIcon('./resources/mic.ico'))
-        micButton.setCheckable(True)
+        self.micButton = QPushButton('Microphone')
+        self.micButton.setIcon(QIcon('./resources/mic.ico'))
+        self.micButton.setCheckable(True)
         # micButton.setStyleSheet("QPushButton:checked {color: white; background-color: green;}")
-        micButton.clicked.connect(self.micFunction)
+        self.micButton.clicked.connect(self.micFunction)
 
         self.editor = QPlainTextEdit()
         fixedfont = QFontDatabase.systemFont(QFontDatabase.FixedFont)
@@ -44,7 +44,7 @@ class Window(QMainWindow):
         buttons_layout = QHBoxLayout()
         buttons_layout.addWidget(oButton)
         buttons_layout.addWidget(sButton)
-        buttons_layout.addWidget(micButton)
+        buttons_layout.addWidget(self.micButton)
 
         layout.addLayout(buttons_layout)
         layout.addWidget(self.editor)
@@ -90,8 +90,10 @@ class Window(QMainWindow):
         self.openAction.triggered.connect(self.file_open)
 
         self.saveAction = QAction("&Save", self)
+        self.saveAction.triggered.connect(self.file_save)
 
         self.exitAction = QAction("&Exit", self)
+        self.exitAction.triggered.connect(self.file_save)
         self.exitAction.triggered.connect(self.close)
 
         self.copyAction = QAction("&Copy", self)
@@ -105,10 +107,19 @@ class Window(QMainWindow):
 
         # TODO Add functionality for Help, About
         self.helpAction = QAction("&Help", self)
+        self.helpAction.triggered.connect(self.helpFunction)
+
         self.aboutAction = QAction("&About", self)
+        self.aboutAction.triggered.connect(self.AboutFunction)
 
     def micFunction(self: Any) -> None:
         """Function for Microphone dictation"""
+        if self.micButton.isChecked():
+            # Add Speech to text output here
+            self.editor.appendPlainText("When you speak text will be appended")
+
+    def new_file(self: Any) -> None:
+        """New file functionality"""
         pass
 
     def file_open(self: Any) -> None:
@@ -117,13 +128,72 @@ class Window(QMainWindow):
 
         if path:
             try:
-                with open(path, 'rU') as file:
+                with open(path, 'r') as file:
                     text = file.read()
             except Exception as e:
-                self.dialog_critical(str(e))
+                exception_dialog = QMessageBox(self)
+                exception_dialog.setWindowTitle("Error")
+                exception_dialog.setText(e)
+                exception_dialog.setIcon(QMessageBox.Critical)
+                exception_dialog.show()
             else:
                 self.path = path
                 self.editor.setPlainText(text)
+
+    def file_save(self: Any) -> None:
+        """File save"""
+        if self.path is None:
+            # If we do not have a path, we need to use Save As.
+            return self.file_saveas()
+
+        self._save_to_path(self.path)
+
+    def file_saveas(self: Any) -> None:
+        """File save as"""
+        path, _ = QFileDialog.getSaveFileName(self, "Save file", "", "Text documents (*.txt);All files (*.*)")
+
+        if not path:
+            # If dialog is cancelled, will return ''
+            return
+
+        self._save_to_path(path)
+
+    def _save_to_path(self: Any, path: str) -> None:
+        """Save to path"""
+        text = self.editor.toPlainText()
+        try:
+            with open(path, 'w') as file:
+                file.write(text)
+
+        except Exception as e:
+            exception_dialog = QMessageBox(self)
+            exception_dialog.setWindowTitle("Error")
+            exception_dialog.setText(e)
+            exception_dialog.setIcon(QMessageBox.Critical)
+            exception_dialog.show()
+
+        else:
+            self.path = path
+
+    def helpFunction(self: Any) -> None:
+        """Displays the help dialog box"""
+        help_msg = """Really? Help in Notepad application. Come on man.\n
+            It's a notepad. You write stuff in it."""
+        dlg = QMessageBox(self)
+        dlg.setWindowTitle("Help")
+        dlg.setText(help_msg)
+        dlg.setIcon(QMessageBox.Information)
+        dlg.show()
+
+    def AboutFunction(self: Any) -> None:
+        """Displays the About dialog box"""
+        about_msg = """Notebooky App for Codejam 2022.\n
+            Created by PyDiscord Team Stately Satyrs."""
+        about_dlg = QMessageBox(self)
+        about_dlg.setWindowTitle("About")
+        about_dlg.setText(about_msg)
+        about_dlg.setIcon(QMessageBox.Information)
+        about_dlg.show()
 
 
 if __name__ == "__main__":

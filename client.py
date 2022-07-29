@@ -33,12 +33,13 @@ CHANNELS = 1  # Audio recording channels
 DEVICE = "default"
 TIMEOUT = (1/SAMPLE_RATE)*BLOCK_SIZE
 
+USER_INFO = util.get_info()
+
 outgoing_queue = queue.Queue(maxsize=BUFFER_SIZE)
 
 
 async def record_buffer(websocket):
     """Capture microphone audio into buffer queue"""
-    event = asyncio.Event()
 
     def callback(indata, frame_count, time_info, status):
         # Add captured sample to outgoing queue
@@ -53,7 +54,8 @@ async def record_buffer(websocket):
 
         await asyncio.sleep(TIMEOUT*5)  # Wait for the queue size to build up to at least 5
 
-        while outgoing_queue.qsize() > 0:
+        listening = True
+        while outgoing_queue.qsize() > 0 and listening:
             print("Sent data. Queue size is now:", outgoing_queue.qsize())
 
             # Update timeout multiplier to attempt to keep record queue constant length
@@ -65,10 +67,11 @@ async def record_buffer(websocket):
             await asyncio.sleep(TIMEOUT*timeout_multiplier)  # Delay to keep queue outgoing consistent with incoming
             data = outgoing_queue.get()
             await websocket.send(data)
-            await websocket.recv()  # OK is sent by server
+            if await websocket.recv() == "NO LISTENER":  # OK is sent by server
+                listening = False
 
-        print("send queue empty")
-        await event.wait()  # Wait until recording is finished
+        print("Stopping listener service")
+        stream.stop()
 
 
 async def send_user_info(websocket):
@@ -79,8 +82,14 @@ async def send_user_info(websocket):
 
 async def main():
     """Main event loop runs client"""
-    with websockets.connect("ws://localhost:8000/stream/testclient") as websocket:
-        await record_buffer(websocket)
+    my_client_name = (USER_INFO["username"] + "-" + USER_INFO["mac_address"]).replace(":", "")
+    async with websockets.connect(f"ws://localhost:8000/stream/{my_client_name}") as websocket:
+        while True:
+            await send_user_info(websocket)
+            response = await websocket.recv()
+            if response != "NO LISTENER":
+                await record_buffer(websocket)
+            await asyncio.sleep(30)
 
 
 if __name__ == "__main__":
