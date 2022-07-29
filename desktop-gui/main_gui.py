@@ -3,8 +3,8 @@ from typing import Any
 
 from PyQt5.QtGui import QFontDatabase, QIcon
 from PyQt5.QtWidgets import (
-    QAction, QApplication, QHBoxLayout, QMainWindow, QPlainTextEdit,
-    QPushButton, QVBoxLayout, QWidget
+    QAction, QApplication, QFileDialog, QHBoxLayout, QMainWindow,
+    QPlainTextEdit, QPushButton, QVBoxLayout, QWidget
 )
 
 
@@ -108,6 +108,20 @@ class Window(QMainWindow):
     def micFunction(self: Any) -> None:
         """Function for Microphone dictation"""
         pass
+
+    def file_open(self: Any) -> None:
+        """Opens files via a dialog box"""
+        path, _ = QFileDialog.getOpenFileName(self, "Open file", "", "Text files (*.txt);All files (*.*)")
+
+        if path:
+            try:
+                with open(path, 'rU') as file:
+                    text = file.read()
+            except Exception as e:
+                self.dialog_critical(str(e))
+            else:
+                self.path = path
+                self.editor.setPlainText(text)
 
 
 if __name__ == "__main__":
