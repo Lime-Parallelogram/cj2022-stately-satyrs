@@ -82,7 +82,7 @@ async def send_user_info(websocket):
 
 async def main():
     """Main event loop runs client"""
-    my_client_name = (USER_INFO["username"] + "-" + USER_INFO["mac-address"]).replace(":", "")
+    my_client_name = (USER_INFO["username"] + "-" + USER_INFO["mac_address"]).replace(":", "")
     async with websockets.connect(f"ws://localhost:8000/stream/{my_client_name}") as websocket:
         while True:
             await send_user_info(websocket)
