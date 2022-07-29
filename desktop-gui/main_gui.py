@@ -1,8 +1,11 @@
 import sys
 from typing import Any
 
-from PyQt5.QtGui import QFontDatabase
-from PyQt5.QtWidgets import QAction, QApplication, QMainWindow, QPlainTextEdit
+from PyQt5.QtGui import QFontDatabase, QIcon
+from PyQt5.QtWidgets import (
+    QAction, QApplication, QFileDialog, QHBoxLayout, QMainWindow,
+    QPlainTextEdit, QPushButton, QVBoxLayout, QWidget
+)
 
 
 class Window(QMainWindow):
@@ -14,12 +17,41 @@ class Window(QMainWindow):
         self.setWindowTitle("Notebooky")
         self.resize(500, 500)
 
-        self.editor = QPlainTextEdit()
-        self.setCentralWidget(self.editor)
+        # TODO Add Tooltips for buttons
+        # TODO Add functionalities for buttons
+        # TODO Set shortcuts for buttons
 
+        oButton = QPushButton('Open')
+        oButton.setIcon(QIcon('./resources/new.ico'))
+        oButton.clicked.connect(self.micFunction)
+
+        sButton = QPushButton('Save')
+        sButton.setIcon(QIcon('./resources/save.ico'))
+        sButton.clicked.connect(self.micFunction)
+
+        micButton = QPushButton('Microphone')
+        micButton.setIcon(QIcon('./resources/mic.ico'))
+        micButton.setCheckable(True)
+        # micButton.setStyleSheet("QPushButton:checked {color: white; background-color: green;}")
+        micButton.clicked.connect(self.micFunction)
+
+        self.editor = QPlainTextEdit()
         fixedfont = QFontDatabase.systemFont(QFontDatabase.FixedFont)
         fixedfont.setPointSize(12)
         self.editor.setFont(fixedfont)
+
+        layout = QVBoxLayout()
+        buttons_layout = QHBoxLayout()
+        buttons_layout.addWidget(oButton)
+        buttons_layout.addWidget(sButton)
+        buttons_layout.addWidget(micButton)
+
+        layout.addLayout(buttons_layout)
+        layout.addWidget(self.editor)
+
+        widget = QWidget()
+        widget.setLayout(layout)
+        self.setCentralWidget(widget)
 
         self.path = None
 
@@ -30,6 +62,7 @@ class Window(QMainWindow):
         """Creation of Menu bar is done here, Actions created added here"""
         menuBar = self.menuBar()
 
+        # TODO Set shortcuts for Menu items
         # File menu - New, Open, Save, Exit
         fileMenu = menuBar.addMenu("&File")
         fileMenu.addAction(self.newAction)
@@ -54,6 +87,8 @@ class Window(QMainWindow):
         self.newAction = QAction("&New", self)
 
         self.openAction = QAction("&Open...", self)
+        self.openAction.triggered.connect(self.file_open)
+
         self.saveAction = QAction("&Save", self)
 
         self.exitAction = QAction("&Exit", self)
@@ -71,6 +106,24 @@ class Window(QMainWindow):
         # TODO Add functionality for Help, About
         self.helpAction = QAction("&Help", self)
         self.aboutAction = QAction("&About", self)
+
+    def micFunction(self: Any) -> None:
+        """Function for Microphone dictation"""
+        pass
+
+    def file_open(self: Any) -> None:
+        """Opens files via a dialog box"""
+        path, _ = QFileDialog.getOpenFileName(self, "Open file", "", "Text files (*.txt);All files (*.*)")
+
+        if path:
+            try:
+                with open(path, 'rU') as file:
+                    text = file.read()
+            except Exception as e:
+                self.dialog_critical(str(e))
+            else:
+                self.path = path
+                self.editor.setPlainText(text)
 
 
 if __name__ == "__main__":
