@@ -17,21 +17,12 @@
         <div class="container text-center">
             <div class="row justify-content-md-center">
                 <div class="col-5">
-                    <select class="form-select form-select-sm" aria-label=".form-select-sm example">
-                        <option value="client-1">client-1</option>
-                        <option value="client-2">client-2</option>
-                        <option value="client-3">client-3</option>
+                    <select id="select_client" class="form-select form-select-sm" aria-label=".form-select-sm example">
+                        {% for client in available_clients %}
+                        <option value="{{client}}">{{client}}</option>
+                        {% endfor %}
                     </select>
-                </div>
-            </div>
-        </div>
-        <div class="container text-center">
-            <div class="row justify-content-md-center">
-                <div class="col-5 mt-2">
-                    <audio controls>
-                        <source src="#" type="audio/mpeg">
-                        Your browser does not support the audio element.
-                    </audio>
+                    <button class="btn btn-dark mt-4" onclick="connect()">Connect</button>
                 </div>
             </div>
         </div>

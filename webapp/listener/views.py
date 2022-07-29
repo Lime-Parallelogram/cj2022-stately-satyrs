@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 from django.template import loader
-
+from channels.layers import get_channel_layer
 
 def index(request):
     """Loads the index of the listener page"""
@@ -11,4 +11,4 @@ def index(request):
 
 def getClients():
     """Get a list of clients available for connection"""
-    return ["client1"]
+    return list(get_channel_layer().groups.keys())
