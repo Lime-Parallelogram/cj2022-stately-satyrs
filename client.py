@@ -70,7 +70,7 @@ async def record_buffer(websocket):
 
 async def main():
     """Main event loop runs client"""
-    async with websockets.connect("ws://192.168.2.68:8765") as websocket:
+    async with websockets.connect("ws://localhost:8000/stream/testclient") as websocket:
         await record_buffer(websocket)
 
 
