@@ -2,7 +2,9 @@ import sys
 from typing import Any
 
 from PyQt5.QtGui import QFontDatabase
-from PyQt5.QtWidgets import QAction, QApplication, QMainWindow, QPlainTextEdit
+from PyQt5.QtWidgets import (
+    QAction, QApplication, QFileDialog, QMainWindow, QPlainTextEdit
+)
 
 
 class Window(QMainWindow):
@@ -54,6 +56,8 @@ class Window(QMainWindow):
         self.newAction = QAction("&New", self)
 
         self.openAction = QAction("&Open...", self)
+        self.openAction.triggered.connect(self.file_open)
+
         self.saveAction = QAction("&Save", self)
 
         self.exitAction = QAction("&Exit", self)
@@ -71,6 +75,20 @@ class Window(QMainWindow):
         # TODO Add functionality for Help, About
         self.helpAction = QAction("&Help", self)
         self.aboutAction = QAction("&About", self)
+
+    def file_open(self: Any) -> None:
+        """Opens files via a dialog box"""
+        path, _ = QFileDialog.getOpenFileName(self, "Open file", "", "Text files (*.txt);All files (*.*)")
+
+        if path:
+            try:
+                with open(path, 'rU') as file:
+                    text = file.read()
+            except Exception as e:
+                self.dialog_critical(str(e))
+            else:
+                self.path = path
+                self.editor.setPlainText(text)
 
 
 if __name__ == "__main__":
