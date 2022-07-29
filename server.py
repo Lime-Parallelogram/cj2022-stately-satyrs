@@ -74,8 +74,13 @@ async def add_que(websocket):
     global playback_started
 
     async for message in websocket:
-        incoming_queue.put_nowait(message)  # Add message content to playback queue
-        print("New size: ", incoming_queue.qsize())
+        if type(message) == str:
+            print(message)  # if data is in string format it will display and write data to a json file
+            with open("data.json", "w+") as f:
+                f.write(message)
+        elif type(message) == bytes:
+            incoming_queue.put_nowait(message)  # Add message content to playback queue
+            print("New size: ", incoming_queue.qsize())
 
         # Start playback module
         if not playback_started and incoming_queue.qsize() > 10:

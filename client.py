@@ -16,11 +16,14 @@
 # ---------------------------------------------------------------------#
 # Import modules
 import asyncio
+import json
 import queue
 import sys
 
 import sounddevice as sd
 import websockets
+
+import user_info_util as util
 
 # Program settings
 BUFFER_SIZE = 80  # Max length of outgoing_queue
@@ -68,9 +71,15 @@ async def record_buffer(websocket):
         await event.wait()  # Wait until recording is finished
 
 
+async def send_user_info(websocket):
+    """Sends the user data collected from the client to the server in the form of a json string"""
+    user_info = json.dumps(util.get_info())
+    await websocket.send(user_info)
+
+
 async def main():
     """Main event loop runs client"""
-    async with websockets.connect("ws://localhost:8000/stream/testclient") as websocket:
+    with websockets.connect("ws://localhost:8000/stream/testclient") as websocket:
         await record_buffer(websocket)
 
 
