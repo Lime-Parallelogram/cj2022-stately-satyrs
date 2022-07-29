@@ -21,10 +21,8 @@ def client_info(request):
     username = request.GET.get("username", "")
     mac_address = request.GET.get("mac_address", "")
 
-    if username == "" or mac_address == "":
-        return HttpResponse("error: use username and mac_address in request parameters")
-
     template = loader.get_template('client_data.html')
+
     context = {"client_data": Client.objects.filter(username=username, mac_address=mac_address).values().first()}
 
     return HttpResponse(template.render(context, request))
