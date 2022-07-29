@@ -4,6 +4,7 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
+    """Migration class in 0002"""
 
     dependencies = [
         ('listener', '0001_initial'),
