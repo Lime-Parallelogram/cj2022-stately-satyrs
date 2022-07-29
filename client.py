@@ -40,7 +40,6 @@ outgoing_queue = queue.Queue(maxsize=BUFFER_SIZE)
 
 async def record_buffer(websocket):
     """Capture microphone audio into buffer queue"""
-    event = asyncio.Event()
 
     def callback(indata, frame_count, time_info, status):
         # Add captured sample to outgoing queue

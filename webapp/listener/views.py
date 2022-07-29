@@ -2,6 +2,7 @@ from django.http import HttpResponse
 from django.template import loader
 from channels.layers import get_channel_layer
 
+
 def index(request):
     """Loads the index of the listener page"""
     template = loader.get_template('index.html')

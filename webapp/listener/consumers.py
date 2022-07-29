@@ -1,5 +1,6 @@
 from channels.generic.websocket import AsyncWebsocketConsumer
 
+
 class AudioStreamConsumer(AsyncWebsocketConsumer):
     """Accept audio via websockets and retransmit to clients"""
 
