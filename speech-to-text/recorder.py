@@ -6,6 +6,7 @@ import speechToTextpy
 
 
 class Recorder:
+    '''Records audio and calls speech recognition on it.'''
     p = pyaudio.PyAudio()
     default_device_info = p.get_default_input_device_info()
     path = pathlib.Path.cwd()/'record.wav'
@@ -25,6 +26,10 @@ class Recorder:
     recording = False
 
     def stop_recording(self):
+        '''
+        Closes stream and wav file.
+        Calls speech recognition code.
+        '''
         self.recording = False
         self.stream.stop_stream()
         self.p.terminate()
@@ -36,7 +41,7 @@ class Recorder:
         return speechToTextpy.main(self.path, file_duration)
 
     def record(self):
-        """Record audio and pass it to the speech recognition code"""
+        """Records audio"""
 
         def callback(in_data, frame_count, time_info, status):
             """Writing audio data in file"""
