@@ -5,8 +5,10 @@ import speech_recognition as sr
 recognizer = sr.Recognizer()
 recognizer.energy_threshold = 300
 
-unknow_value_errors = 0  # stores the number of times the sr.UnknownValueError occurred
-remote_errors = 0  # tores the number of times the RemoteDisconnected error occurred
+# stores the number of times the sr.UnknownValueError occurred
+unknow_value_errors = 0
+# stores the number of times the RemoteDisconnected error occurred
+remote_errors = 0
 
 
 def recognize(audio, lang="en-US") -> str:
@@ -15,28 +17,29 @@ def recognize(audio, lang="en-US") -> str:
 
     Handles errors and tries different solutions.
     """
-    print("working on it")
     global unknow_value_errors
     global remote_errors
 
     try:
         return recognizer.recognize_google(audio, language=lang)
-    except sr.UnknownValueError:
-        if unknow_value_errors == 0:  # tries with a different language
+    except sr.UnknownValueError:  # tries with a different language
+        if unknow_value_errors == 0:
             recognizer.energy_threshold = 200
             unknow_value_errors += 1
             return recognize(audio, lang="en-GB")
         else:
-            unknow_value_errors = 0  # reset to 0 for the next time the function will be called
+            # reset to 0 for the next time the function will be called
+            unknow_value_errors = 0
             return "Didn't catch that"
     except sr.RequestError:
         return "Request error, verify your connection"
-    except RemoteDisconnected:
+    except RemoteDisconnected:  # retries to send the audio
         if remote_errors < 2:
             remote_errors += 1
             return recognize(audio)
         else:
-            remote_errors = 0  # reset to 0 for the next time the function will be called
+            # reset to 0 for the next time the function will be called
+            remote_errors = 0
             return "Remote Disconnected, verify your connection"
 
 
@@ -55,7 +58,8 @@ def main(file_path, file_duration) -> str:
         if file_duration > 15:
             for time in range(int(file_duration/10)+1):
                 # Dividing audio source into chunks.
-                # Sending a long audio file to the API can return a RemoteDisconnected error.
+                # Sending a long audio file to the API
+                # can return a RemoteDisconnected error.
                 audio = recognizer.record(source, duration=10)
                 text += recognize(audio)+"\n"
         else:
