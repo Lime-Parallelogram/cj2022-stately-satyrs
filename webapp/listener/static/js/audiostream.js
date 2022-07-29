@@ -22,7 +22,6 @@ socket.onmessage = function(event) {
             playByteArray(new Float32Array(e.target.result));  // arraybuffer object
         });
     }
-  
 };
 
 // Stereo
