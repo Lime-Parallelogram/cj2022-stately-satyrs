@@ -1,6 +1,5 @@
 import pathlib
 import wave
-from typing import Any
 
 import pyaudio
 import speechToTextpy
@@ -27,22 +26,25 @@ class Recorder:
     stream = None
     recording = False
 
-    def stop_recording(self: Any) -> None:
+    def stop_recording(self, editor):
         """Calls speech recognition code."""
+        print("debugging: func called")
         self.recording = False
         self.stream.stop_stream()
         self.p.terminate()
         self.wav_file.close()
 
+        print("record terminated")
         with wave.open(self.path, 'r') as wf:
             file_duration = round(wf.getnframes() / wf.getframerate())
 
-        return speechToTextpy.main(self.path, file_duration)
+        print("calling API")
+        text = speechToTextpy.main(self.path, file_duration)
+        editor.appendPlainText(text)
 
-    def record(self: Any) -> None:
+    def record(self):
         """Records audio"""
-
-        def callback(in_data: Any, frame_count: Any, time_info: Any, status: Any) -> None:
+        def callback(in_data, frame_count, time_info, status):
             """Writing audio data in file"""
             self.wav_file.writeframes(in_data)
             return (in_data, pyaudio.paContinue)
