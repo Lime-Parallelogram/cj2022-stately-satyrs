@@ -1,4 +1,9 @@
+import json
+
+from asgiref.sync import sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
+
+from .models import Client
 
 
 class AudioStreamConsumer(AsyncWebsocketConsumer):
@@ -9,7 +14,6 @@ class AudioStreamConsumer(AsyncWebsocketConsumer):
         self.room_group_name = self.scope["url_route"]["kwargs"]["client_ID"]
 
         # Join room group
-        print("now joining room:", self.channel_layer_alias)
         await self.channel_layer.group_add(self.room_group_name, self.channel_name)
 
         await self.accept()
@@ -17,12 +21,20 @@ class AudioStreamConsumer(AsyncWebsocketConsumer):
     async def disconnect(self, close_code):
         """Leave the channel when a client disconnects"""
         # Leave room group
+        name, mac = self.room_group_name.split("-")
+        mac = ':'.join([mac[i:i+2] for i in range(0, len(mac), 2)])
+
+        print("Will now delete where:", name, mac)
+        await sync_to_async((await sync_to_async(Client.objects.get)(mac_address=mac, username=name)).delete)()
         await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
 
     async def receive(self, text_data=None, bytes_data=None, **kwargs):
         """Receive incoming data"""
         if text_data:
             print(text_data)
+            json_data = json.loads(text_data)
+            await sync_to_async(Client.objects.get_or_create)(**json_data)
+
             if len(self.channel_layer.groups[self.room_group_name]) > 1:
                 await self.send(text_data="OK")
             else:
