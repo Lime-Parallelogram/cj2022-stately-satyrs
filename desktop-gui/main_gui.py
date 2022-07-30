@@ -1,8 +1,8 @@
 import sys
-from typing import Any
 from threading import Thread
-import recorder as reco
+from typing import Any
 
+import recorder as reco
 from PyQt5.QtGui import QFontDatabase, QIcon
 from PyQt5.QtWidgets import (
     QAction, QApplication, QFileDialog, QHBoxLayout, QMainWindow, QMessageBox,
@@ -37,14 +37,14 @@ class Window(QMainWindow):
         self.micButton.setCheckable(True)
         self.micButton.setStyleSheet(
             "QPushButton:checked {color: red; background-color: white;}"
-            )
+        )
         self.micButton.clicked.connect(self.micFunction)
         self.micButton.setToolTip(
             '''
             Use this for Speech to text,\n
             When pressed it writes to text what you speak
             '''
-            )
+        )
 
         self.editor = QPlainTextEdit()
         fixedfont = QFontDatabase.systemFont(QFontDatabase.FixedFont)
@@ -138,7 +138,7 @@ class Window(QMainWindow):
         else:
             self.stop_rec_thread = Thread(
                 target=self.rec.stop_recording, args=(self.editor,)
-                )
+            )
             self.stop_rec_thread.start()
             # self.editor.append(text)
 
@@ -152,7 +152,7 @@ class Window(QMainWindow):
         """Opens files via a dialog box"""
         path, _ = QFileDialog.getOpenFileName(
             self, "Open file", "", "Text files (*.txt);All files (*.*)"
-            )
+        )
 
         if path:
             try:
@@ -180,7 +180,7 @@ class Window(QMainWindow):
         """File save as"""
         path, _ = QFileDialog.getSaveFileName(
             self, "Save file", "", "Text documents (*.txt);All files (*.*)"
-            )
+        )
 
         if not path:
             # If dialog is cancelled, will return ''
