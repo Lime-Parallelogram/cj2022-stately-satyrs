@@ -14,26 +14,26 @@ class Window(QMainWindow):
     def __init__(self: Any, parent: Any = None) -> None:
         """Initializer."""
         super().__init__(parent)
-        self.setWindowTitle("Notebooky")
+        self.setWindowTitle("Dictaty - A SpeechToText Notepad")
         self.resize(500, 500)
-
-        # TODO Add Tooltips for buttons
-        # TODO Add functionalities for buttons
-        # TODO Set shortcuts for buttons
 
         oButton = QPushButton('Open')
         oButton.setIcon(QIcon('./resources/new.ico'))
         oButton.clicked.connect(self.file_open)
+        oButton.setToolTip('Will open file for you')
 
         sButton = QPushButton('Save')
         sButton.setIcon(QIcon('./resources/save.ico'))
         sButton.clicked.connect(self.file_save)
+        sButton.setToolTip('Save the file')
 
         self.micButton = QPushButton('Microphone')
         self.micButton.setIcon(QIcon('./resources/mic.ico'))
+        self.micButton.setShortcut("Ctrl+M")
         self.micButton.setCheckable(True)
-        # micButton.setStyleSheet("QPushButton:checked {color: white; background-color: green;}")
+        self.micButton.setStyleSheet("QPushButton:checked {color: red; background-color: white;}")
         self.micButton.clicked.connect(self.micFunction)
+        self.micButton.setToolTip('Use this for Speech to text,\nWhen pressed it writes to text what you speak')
 
         self.editor = QPlainTextEdit()
         fixedfont = QFontDatabase.systemFont(QFontDatabase.FixedFont)
@@ -62,54 +62,59 @@ class Window(QMainWindow):
         """Creation of Menu bar is done here, Actions created added here"""
         menuBar = self.menuBar()
 
-        # TODO Set shortcuts for Menu items
         # File menu - New, Open, Save, Exit
-        fileMenu = menuBar.addMenu("&File")
+        fileMenu = menuBar.addMenu("File")
         fileMenu.addAction(self.newAction)
         fileMenu.addAction(self.openAction)
         fileMenu.addAction(self.saveAction)
         fileMenu.addAction(self.exitAction)
 
         # Edit menu - Copy, Paste, Cut
-        editMenu = menuBar.addMenu("&Edit")
+        editMenu = menuBar.addMenu("Edit")
         editMenu.addAction(self.copyAction)
         editMenu.addAction(self.pasteAction)
         editMenu.addAction(self.cutAction)
 
         # Help menu - Help, About
-        helpMenu = menuBar.addMenu("&Help")
+        helpMenu = menuBar.addMenu("Help")
         helpMenu.addAction(self.helpAction)
         helpMenu.addAction(self.aboutAction)
 
     def _createActions(self: Any) -> None:
         """All the actions for GUI are declared here"""
-        # TODO Add functionality for New, Open, Save
-        self.newAction = QAction("&New", self)
+        self.newAction = QAction("New", self)
+        self.newAction.setShortcut("Ctrl+N")
+        self.newAction.triggered.connect(self.new_file)
 
-        self.openAction = QAction("&Open...", self)
+        self.openAction = QAction("Open...", self)
+        self.openAction.setShortcut("Ctrl+O")
         self.openAction.triggered.connect(self.file_open)
 
-        self.saveAction = QAction("&Save", self)
+        self.saveAction = QAction("Save", self)
+        self.saveAction.setShortcut("Ctrl+S")
         self.saveAction.triggered.connect(self.file_save)
 
-        self.exitAction = QAction("&Exit", self)
+        self.exitAction = QAction("Exit", self)
+        self.exitAction.setShortcut("Ctrl+Q")
         self.exitAction.triggered.connect(self.file_save)
         self.exitAction.triggered.connect(self.close)
 
-        self.copyAction = QAction("&Copy", self)
+        self.copyAction = QAction("Copy", self)
+        self.copyAction.setShortcut("Ctrl+C")
         self.copyAction.triggered.connect(self.editor.copy)
 
-        self.pasteAction = QAction("&Paste", self)
+        self.pasteAction = QAction("Paste", self)
+        self.pasteAction.setShortcut("Ctrl+P")
         self.pasteAction.triggered.connect(self.editor.paste)
 
-        self.cutAction = QAction("&Cut", self)
+        self.cutAction = QAction("Cut", self)
+        self.cutAction.setShortcut("Ctrl+X")
         self.cutAction.triggered.connect(self.editor.cut)
 
-        # TODO Add functionality for Help, About
-        self.helpAction = QAction("&Help", self)
+        self.helpAction = QAction("Help", self)
         self.helpAction.triggered.connect(self.helpFunction)
 
-        self.aboutAction = QAction("&About", self)
+        self.aboutAction = QAction("About", self)
         self.aboutAction.triggered.connect(self.AboutFunction)
 
     def micFunction(self: Any) -> None:
@@ -120,7 +125,9 @@ class Window(QMainWindow):
 
     def new_file(self: Any) -> None:
         """New file functionality"""
-        pass
+        self.file_save()
+        self.path = None
+        self.editor.clear()
 
     def file_open(self: Any) -> None:
         """Opens files via a dialog box"""
