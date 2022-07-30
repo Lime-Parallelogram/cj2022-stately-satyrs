@@ -1,5 +1,7 @@
 import sys
 from typing import Any
+from threading import Thread
+import recorder as reco
 
 from PyQt5.QtGui import QFontDatabase, QIcon
 from PyQt5.QtWidgets import (
@@ -17,6 +19,8 @@ class Window(QMainWindow):
         self.setWindowTitle("Dictaty - A SpeechToText Notepad")
         self.resize(500, 500)
 
+        self.rec = reco.Recorder()
+
         oButton = QPushButton('Open')
         oButton.setIcon(QIcon('./resources/new.ico'))
         oButton.clicked.connect(self.file_open)
@@ -31,9 +35,16 @@ class Window(QMainWindow):
         self.micButton.setIcon(QIcon('./resources/mic.ico'))
         self.micButton.setShortcut("Ctrl+M")
         self.micButton.setCheckable(True)
-        self.micButton.setStyleSheet("QPushButton:checked {color: red; background-color: white;}")
+        self.micButton.setStyleSheet(
+            "QPushButton:checked {color: red; background-color: white;}"
+            )
         self.micButton.clicked.connect(self.micFunction)
-        self.micButton.setToolTip('Use this for Speech to text,\nWhen pressed it writes to text what you speak')
+        self.micButton.setToolTip(
+            '''
+            Use this for Speech to text,\n
+            When pressed it writes to text what you speak
+            '''
+            )
 
         self.editor = QPlainTextEdit()
         fixedfont = QFontDatabase.systemFont(QFontDatabase.FixedFont)
@@ -119,9 +130,17 @@ class Window(QMainWindow):
 
     def micFunction(self: Any) -> None:
         """Function for Microphone dictation"""
+        # Add Speech to text output here
+        # self.editor.appendPlainText("When you speak text will be appended")
         if self.micButton.isChecked():
-            # Add Speech to text output here
-            self.editor.appendPlainText("When you speak text will be appended")
+            self.mic_thread = Thread(target=self.rec.record)
+            self.mic_thread.start()
+        else:
+            self.stop_rec_thread = Thread(
+                target=self.rec.stop_recording, args=(self.editor,)
+                )
+            self.stop_rec_thread.start()
+            # self.editor.append(text)
 
     def new_file(self: Any) -> None:
         """New file functionality"""
@@ -131,7 +150,9 @@ class Window(QMainWindow):
 
     def file_open(self: Any) -> None:
         """Opens files via a dialog box"""
-        path, _ = QFileDialog.getOpenFileName(self, "Open file", "", "Text files (*.txt);All files (*.*)")
+        path, _ = QFileDialog.getOpenFileName(
+            self, "Open file", "", "Text files (*.txt);All files (*.*)"
+            )
 
         if path:
             try:
@@ -157,7 +178,9 @@ class Window(QMainWindow):
 
     def file_saveas(self: Any) -> None:
         """File save as"""
-        path, _ = QFileDialog.getSaveFileName(self, "Save file", "", "Text documents (*.txt);All files (*.*)")
+        path, _ = QFileDialog.getSaveFileName(
+            self, "Save file", "", "Text documents (*.txt);All files (*.*)"
+            )
 
         if not path:
             # If dialog is cancelled, will return ''
