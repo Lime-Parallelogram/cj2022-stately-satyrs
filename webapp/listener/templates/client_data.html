@@ -1,14 +1,6 @@
-{% extends 'base.html' %}
-
-{% block body %}
-
 <!-- user data for selected client ? -->
 <div class="container text-start p-3 w-75">
     <div class="mb-3 row">
-        {% if client_data.items|length == 0 %}
-        <h5 class="text-center">no data :(</h5>
-        {% endif %}
-
         {% for key, value in client_data.items %}
         {% if key != "id" %}
         <label for="{{ key }}" class="col-sm-4 col-form-label fw-bold text-end">{{key|upper}}:</label>
@@ -18,8 +10,5 @@
         {% endif %}
 
         {% endfor %}
-        <a class="btn btn-dark mt-4" href="{% url 'index' %}"">Back</a>
     </div>
 </div>
-
-{% endblock %}
