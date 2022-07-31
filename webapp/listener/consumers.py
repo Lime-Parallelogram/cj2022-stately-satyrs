@@ -12,6 +12,7 @@ class AudioStreamConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         """On connection"""
         self.room_group_name = self.scope["url_route"]["kwargs"]["client_ID"]
+        self.is_listener = True if ("/listen/" in str(self.scope["path"])) else False
 
         # Join room group
         await self.channel_layer.group_add(self.room_group_name, self.channel_name)
@@ -24,9 +25,10 @@ class AudioStreamConsumer(AsyncWebsocketConsumer):
         name, mac = self.room_group_name.split("-")
         mac = ':'.join([mac[i:i+2] for i in range(0, len(mac), 2)])
 
-        print("Will now delete where:", name, mac)
-        await sync_to_async((await sync_to_async(Client.objects.get)(mac_address=mac, username=name)).delete)()
-        await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
+        if not self.is_listener:
+            print("Will now delete where:", name, mac)
+            await sync_to_async((await sync_to_async(Client.objects.get)(mac_address=mac, username=name)).delete)()
+            await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
 
     async def receive(self, text_data=None, bytes_data=None, **kwargs):
         """Receive incoming data"""
@@ -55,3 +57,42 @@ class AudioStreamConsumer(AsyncWebsocketConsumer):
 
         else:
             await self.send(text_data="NO LISTENER")
+
+
+class DataConsumer(AsyncWebsocketConsumer):
+    """Accept audio via websockets and retransmit to clients"""
+
+    async def connect(self):
+        """On connection"""
+        await self.accept()
+
+    async def receive(self, text_data=None, bytes_data=None, **kwargs):
+        """Receive incoming data"""
+        if text_data:
+            if text_data[:5] == "DATA:":
+                keyData = text_data[5:]
+                name, mac = keyData.split("-")
+                mac = ':'.join([mac[i:i+2] for i in range(0, len(mac), 2)])
+
+                userDetail = await sync_to_async(Client.objects.get)(mac_address=mac, username=name)
+                await self.send(json.dumps({"system": userDetail.system,
+                                            "version": userDetail.version,
+                                            "release": userDetail.release,
+                                            "username": userDetail.username,
+                                            "architecture": userDetail.architecture,
+                                            "processor": userDetail.processor,
+                                            "ip": userDetail.ip,
+                                            "mac_address": userDetail.mac_address}))
+            if text_data == "CLIENT LIST":
+                clientList = await self.get_clients_list()
+                await self.send(json.dumps({"users": clientList}))
+
+    @sync_to_async
+    def get_clients_list(self):
+        """Retrieve list of clients available for connection"""
+        clients = Client.objects.all()
+        outList = []
+        for client in clients:
+            outList.append(client.username + "-" + client.mac_address.replace(":", ""))
+
+        return outList
