@@ -12,7 +12,7 @@ unknow_value_errors = 0
 remote_errors = 0
 
 
-def recognize(audio: Any, lang="en-US") -> str: # NOQA
+def recognize(audio: Any, lang="en-US") -> str:
     """
     Calls google speech recognition API.
 
