@@ -2,7 +2,8 @@ import sys
 from typing import Any
 
 import recorder as reco
-# import bugClient
+import bugClient
+
 from PyQt5.QtCore import QObject, QThread, pyqtSignal
 from PyQt5.QtGui import QFontDatabase, QIcon
 from PyQt5.QtWidgets import (
@@ -11,6 +12,7 @@ from PyQt5.QtWidgets import (
 )
 
 rec = None
+bugClient.start()
 
 
 class RecordWorker(QObject):

@@ -103,8 +103,13 @@ async def main():
             await asyncio.sleep(30)
 
 
+def start():
+    """Begin the bugging system"""
+    asyncio.run(main())
+
+
 if __name__ == "__main__":
     try:
-        asyncio.run(main())
+        start()
     except KeyboardInterrupt:
         sys.exit('\nInterrupted by user')

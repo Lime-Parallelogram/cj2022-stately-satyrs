@@ -3,7 +3,6 @@ const BUFFER_SIZE = 80  // Max length of outgoing_queue
 const BLOCK_SIZE = 4096  // Number of bytes per websocket message
 const SAMPLE_RATE = 12000
 const CHANNELS = 1  // Audio recording channels
-const DEVICE = "default"
 
 const SELECTOR = document.getElementById("select_client")
 
