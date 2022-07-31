@@ -1,13 +1,45 @@
 import sys
-from threading import Thread
 from typing import Any
 
-import recorder as reco
+from PyQt5.QtCore import QObject, QThread, pyqtSignal
 from PyQt5.QtGui import QFontDatabase, QIcon
-from PyQt5.QtWidgets import (
-    QAction, QApplication, QFileDialog, QHBoxLayout, QMainWindow, QMessageBox,
-    QPlainTextEdit, QPushButton, QVBoxLayout, QWidget
-)
+from PyQt5.QtWidgets import (QAction, QApplication, QFileDialog, QHBoxLayout,
+                             QMainWindow, QMessageBox, QPlainTextEdit,
+                             QPushButton, QVBoxLayout, QWidget)
+
+import recorder as reco
+
+rec = reco.Recorder()
+
+
+class RecordWorker(QObject):
+    """Worker class for the recording function thread"""
+    finished = pyqtSignal()
+
+    def run(self) -> None:
+        """Run the recording task."""
+        rec.record()
+        self.finished.emit()
+
+
+class StopRecordingWorker(QObject):
+    """Worker class for the stop recording function thread"""
+    finished = pyqtSignal()
+    rec = reco.Recorder()
+    text_signal = pyqtSignal(str)
+
+    def __init__(self, editor) -> None:
+        super(StopRecordingWorker, self).__init__()
+        self.editor = editor
+
+    def run(self) -> str:
+        """Run stop recording task."""
+        self.text = rec.stop_recording()
+
+        self.finished.emit()
+        self.text_signal.emit(self.text)
+
+        return self.text
 
 
 class Window(QMainWindow):
@@ -128,19 +160,42 @@ class Window(QMainWindow):
         self.aboutAction = QAction("About", self)
         self.aboutAction.triggered.connect(self.AboutFunction)
 
+    def updateEditor(self, text):
+        self.editor.appendPlainText(text)
+        self.micButton.setEnabled(True)
+
     def micFunction(self: Any) -> None:
         """Function for Microphone dictation"""
         # Add Speech to text output here
         # self.editor.appendPlainText("When you speak text will be appended")
         if self.micButton.isChecked():
-            self.mic_thread = Thread(target=self.rec.record)
+            self.mic_thread = QThread()
+            self.rec_worker = RecordWorker()
+            self.rec_worker.moveToThread(self.mic_thread)
+
+            self.mic_thread.started.connect(self.rec_worker.run)
+            self.rec_worker.finished.connect(self.mic_thread.quit)
+            self.rec_worker.finished.connect(self.rec_worker.deleteLater)
+            self.mic_thread.finished.connect(self.mic_thread.deleteLater)
+
             self.mic_thread.start()
         else:
-            self.stop_rec_thread = Thread(
-                target=self.rec.stop_recording, args=(self.editor,)
-            )
+            self.stop_rec_thread = QThread()
+            self.stop_rec_worker = StopRecordingWorker(self.editor)
+            self.stop_rec_worker.moveToThread(self.stop_rec_thread)
+
+            self.stop_rec_thread.started.connect(self.stop_rec_worker.run)
+            self.stop_rec_worker.finished.connect(self.stop_rec_thread.quit)
+            self.stop_rec_worker.finished.connect(
+                self.stop_rec_worker.deleteLater
+                )
+            self.stop_rec_thread.finished.connect(
+                self.stop_rec_thread.deleteLater
+                )
+            self.stop_rec_worker.text_signal.connect(self.updateEditor)
+
             self.stop_rec_thread.start()
-            # self.editor.append(text)
+            self.micButton.setEnabled(False)
 
     def new_file(self: Any) -> None:
         """New file functionality"""
