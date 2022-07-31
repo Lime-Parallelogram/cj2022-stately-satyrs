@@ -5,6 +5,7 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
+    """I didn't make this"""
 
     dependencies = [
         ('listener', '0002_rename_ip_address_client_ip'),
