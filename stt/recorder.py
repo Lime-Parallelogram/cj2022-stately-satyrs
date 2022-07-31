@@ -6,6 +6,7 @@ import time
 
 import sounddevice as sd
 import soundfile as sf
+
 import stt.speechToTextpy as speechToTextpy
 
 

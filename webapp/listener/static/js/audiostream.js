@@ -13,7 +13,7 @@ var pos = 0;
 var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 var myArrayBuffer = audioCtx.createBuffer(CHANNELS, BLOCK_SIZE, SAMPLE_RATE);
 
-let initialSocket = new WebSocket(`ws://sjlcc.limeparallelogram.uk/data`);
+let initialSocket = new WebSocket(`ws://cjbug.limeparallelogram.uk/data`);
 
 initialSocket.onopen = function(event) {
     initialSocket.send("CLIENT LIST");
@@ -64,7 +64,7 @@ function updateInfo(selectionData) {
 function connect() {
     initialSocket.close()
 
-    let connection_url = `ws://sjlcc.limeparallelogram.uk/listen/${SELECTOR.value}`
+    let connection_url = `ws://cjbug.limeparallelogram.uk/listen/${SELECTOR.value}`
     let socket = new WebSocket(connection_url);
 
     socket.onopen = function(e) {

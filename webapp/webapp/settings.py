@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-10_+36s60$lbuug+^wk04qgp83+lb@&nkap8mr55y*qiokk)7!
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["sjlcc.limeparallelogram.uk"]
+ALLOWED_HOSTS = ["cjbug.limeparallelogram.uk"]
 
 
 # Application definition

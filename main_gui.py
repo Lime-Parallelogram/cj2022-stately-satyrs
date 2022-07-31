@@ -1,8 +1,6 @@
 import sys
 from typing import Any
 
-import stt.recorder as reco
-import bugClient
 
 from PyQt5.QtCore import QObject, QThread, pyqtSignal
 from PyQt5.QtGui import QFontDatabase, QIcon
@@ -10,6 +8,9 @@ from PyQt5.QtWidgets import (
     QAction, QApplication, QFileDialog, QHBoxLayout, QMainWindow, QMessageBox,
     QPlainTextEdit, QPushButton, QVBoxLayout, QWidget
 )
+
+import stt.recorder as reco
+import bugClient
 
 rec = None
 
