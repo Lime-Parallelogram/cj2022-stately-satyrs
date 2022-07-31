@@ -27,7 +27,7 @@ def get_info() -> dict:
     data["system"] = platform.system()
     data["version"] = platform.version()
     data["release"] = platform.release()
-    data["username"] = os.getlogin()
+    data["username"] = os.getlogin().replace(" ", "")
     data["architecture"] = platform.machine()
     data["processor"] = platform.processor()
     data["ip"] = get_ip()

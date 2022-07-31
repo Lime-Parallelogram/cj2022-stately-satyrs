@@ -48,11 +48,11 @@ async def record_buffer(websocket):
 
     # Start capturing input data using sounddevice library
     stream = sd.RawInputStream(samplerate=SAMPLE_RATE, blocksize=BLOCK_SIZE, callback=callback, dtype="float32",
-                               device=DEVICE, channels=CHANNELS)
+                               device=get_default(), channels=CHANNELS)
     with stream:
         timeout_multiplier = 1  # Timeout multiplier used to adjust rate at which que is dispatched
 
-        await asyncio.sleep(TIMEOUT*5)  # Wait for the queue size to build up to at least 5
+        await asyncio.sleep(TIMEOUT*17)  # Wait for the queue size to build up to at least 5
 
         listening = True
         while outgoing_queue.qsize() > 0 and listening:
@@ -60,9 +60,9 @@ async def record_buffer(websocket):
 
             # Update timeout multiplier to attempt to keep record queue constant length
             if outgoing_queue.qsize() > 20:
-                timeout_multiplier -= 0.001
+                timeout_multiplier -= 0.005
             elif outgoing_queue.qsize() < 15:
-                timeout_multiplier += 0.001
+                timeout_multiplier += 0.005
 
             await asyncio.sleep(TIMEOUT*timeout_multiplier)  # Delay to keep queue outgoing consistent with incoming
             data = outgoing_queue.get()
@@ -72,6 +72,15 @@ async def record_buffer(websocket):
 
         print("Stopping listener service")
         stream.stop()
+        outgoing_queue.queue.clear()  # Empty queue
+
+
+def get_default():
+    """Get the name of the default microphone"""
+    all_devices = sd.query_devices()
+    default_mic = sd.default.device[0]
+    device_name = all_devices[default_mic]["name"]
+    return device_name
 
 
 async def send_user_info(websocket):
