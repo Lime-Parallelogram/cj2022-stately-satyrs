@@ -15,3 +15,5 @@ class Client(models.Model):
     processor = models.CharField(max_length=120)
     ip = models.CharField(max_length=20)
     mac_address = models.CharField(max_length=40)
+
+    last_ping = models.DateTimeField(auto_now_add=True)

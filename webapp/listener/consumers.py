@@ -1,4 +1,6 @@
+from datetime import datetime, timedelta
 import json
+from turtle import update
 
 from asgiref.sync import sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
@@ -27,7 +29,7 @@ class AudioStreamConsumer(AsyncWebsocketConsumer):
 
         if not self.is_listener:
             print("Will now delete where:", name, mac)
-            await sync_to_async((await sync_to_async(Client.objects.get)(mac_address=mac, username=name)).delete)()
+            # await sync_to_async((await sync_to_async(Client.objects.get)(mac_address=mac, username=name)).delete)()
             await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
 
     async def receive(self, text_data=None, bytes_data=None, **kwargs):
@@ -35,7 +37,7 @@ class AudioStreamConsumer(AsyncWebsocketConsumer):
         if text_data:
             print(text_data)
             json_data = json.loads(text_data)
-            await sync_to_async(Client.objects.get_or_create)(**json_data)
+            await self.update_ping(json_data)
 
             if len(self.channel_layer.groups[self.room_group_name]) > 1:
                 await self.send(text_data="OK")
@@ -45,6 +47,13 @@ class AudioStreamConsumer(AsyncWebsocketConsumer):
             await self.channel_layer.group_send(
                 self.room_group_name, {"type": "stream_data", "bytes": bytes_data}
             )
+
+    @sync_to_async
+    def update_ping(self, jsonData):
+        """Retrieve list of clients available for connection"""
+        record = Client.objects.get_or_create(**jsonData)
+        record[0].last_ping = datetime.now()
+        Client.save(record[0])
 
     # Receive message from room group
     async def stream_data(self, event):
@@ -84,13 +93,16 @@ class DataConsumer(AsyncWebsocketConsumer):
                                             "ip": userDetail.ip,
                                             "mac_address": userDetail.mac_address}))
             if text_data == "CLIENT LIST":
+                print("Returning Client List")
                 clientList = await self.get_clients_list()
                 await self.send(json.dumps({"users": clientList}))
 
     @sync_to_async
     def get_clients_list(self):
         """Retrieve list of clients available for connection"""
-        clients = Client.objects.all()
+        now = datetime.now()
+        start_time = now - timedelta(minutes=2)
+        clients = Client.objects.filter(last_ping__range=(start_time, now))
         outList = []
         for client in clients:
             outList.append(client.username + "-" + client.mac_address.replace(":", ""))
