@@ -8,6 +8,7 @@ import speechToTextpy
 
 class Recorder:
     """Records audio and calls speech recognition on it."""
+
     def __init__(self) -> None:
         self.p = pyaudio.PyAudio()
         self.default_device_info = self.p.get_default_input_device_info()
@@ -27,7 +28,6 @@ class Recorder:
 
     def stop_recording(self):
         """Calls speech recognition code."""
-
         self.recording = False
         self.stream.stop_stream()
         self.p.terminate()

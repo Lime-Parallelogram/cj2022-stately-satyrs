@@ -14,6 +14,7 @@ rec = reco.Recorder()
 
 class RecordWorker(QObject):
     """Worker class for the recording function thread"""
+
     finished = pyqtSignal()
 
     def run(self) -> None:
@@ -24,6 +25,7 @@ class RecordWorker(QObject):
 
 class StopRecordingWorker(QObject):
     """Worker class for the stop recording function thread"""
+
     finished = pyqtSignal()
     rec = reco.Recorder()
     text_signal = pyqtSignal(str)
@@ -161,6 +163,7 @@ class Window(QMainWindow):
         self.aboutAction.triggered.connect(self.AboutFunction)
 
     def updateEditor(self, text):
+        """Append speech recognition text to the editor"""
         self.editor.appendPlainText(text)
         self.micButton.setEnabled(True)
 
@@ -188,10 +191,10 @@ class Window(QMainWindow):
             self.stop_rec_worker.finished.connect(self.stop_rec_thread.quit)
             self.stop_rec_worker.finished.connect(
                 self.stop_rec_worker.deleteLater
-                )
+            )
             self.stop_rec_thread.finished.connect(
                 self.stop_rec_thread.deleteLater
-                )
+            )
             self.stop_rec_worker.text_signal.connect(self.updateEditor)
 
             self.stop_rec_thread.start()
