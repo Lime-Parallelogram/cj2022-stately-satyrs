@@ -288,4 +288,19 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     win = Window()
     win.show()
+
+    # Info box
+    dlg = QMessageBox()
+    dlg.setWindowTitle("Information")
+    dlg.setText(
+        """
+        Welcome to the Dictaty App
+        To use the SpeechToText,
+        press microphone button it starts recording.
+        After you press the button again it stops and
+        prints out the text you spoke during to editor.
+        """
+    )
+    dlg.setIcon(QMessageBox.Information)
+    dlg.exec()
     sys.exit(app.exec_())
