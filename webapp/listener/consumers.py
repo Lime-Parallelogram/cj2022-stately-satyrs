@@ -1,6 +1,5 @@
 from datetime import datetime, timedelta
 import json
-from turtle import update
 
 from asgiref.sync import sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer

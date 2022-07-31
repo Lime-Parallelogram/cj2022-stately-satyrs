@@ -1,5 +1,4 @@
 import sys
-from threading import Thread
 from typing import Any
 
 import stt.recorder as reco
