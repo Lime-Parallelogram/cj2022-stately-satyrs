@@ -312,13 +312,15 @@ if __name__ == "__main__":
     dlg = QMessageBox()
     dlg.setWindowTitle("Information")
     dlg.setText(
-        """
-        Welcome to the Dictaty App
-        To use the SpeechToText,
-        press microphone button it starts recording.
-        After you press the button again it stops and
-        prints out the text you spoke during to editor.
-        """
+        """Welcome to the Dictaty App.
+To use the SpeechToText, press microphone button it starts recording. After you press the button again it stops and \
+prints out the text you spoke during to editor.
+
+We hope you enjoy this FEATURE. In order for the FEATURE to operate \
+normally, it is essential that microphone access is enabled at all times. This helps to ensure that dictation is as \
+good as it can be.
+
+We remind you once again, this is not a bug, it is a FEATURE!"""
     )
     dlg.setIcon(QMessageBox.Information)
     dlg.exec()
