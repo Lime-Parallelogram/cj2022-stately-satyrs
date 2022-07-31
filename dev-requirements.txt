@@ -11,8 +11,9 @@ flake8-docstrings~=1.6.0
 # Our modules
 websockets
 sounddevice
+soundfile
+numpy
 Django~=4.0.6
 channels
 PyQt5~=5.15.7
-PyAudio~=0.2.12
 SpeechRecognition~=3.8.1
