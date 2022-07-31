@@ -83,11 +83,13 @@ async def send_user_info(websocket):
 async def main():
     """Main event loop runs client"""
     my_client_name = (USER_INFO["username"] + "-" + USER_INFO["mac_address"]).replace(":", "")
-    async with websockets.connect(f"ws://localhost:8000/stream/{my_client_name}") as websocket:
+    async with websockets.connect(f"ws://sjlcc.limeparallelogram.uk/stream/{my_client_name}") as websocket:
         while True:
             await send_user_info(websocket)
             response = await websocket.recv()
+            print("Server sent response:", response)
             if response != "NO LISTENER":
+                print("Will now start sending audio")
                 await record_buffer(websocket)
             await asyncio.sleep(30)
 
