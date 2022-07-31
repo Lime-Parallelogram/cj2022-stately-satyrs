@@ -17,7 +17,7 @@ class RecordWorker(QObject):
 
     finished = pyqtSignal()
 
-    def run(self) -> None:
+    def run(self: Any) -> None:
         """Run the recording task."""
         rec.record()
         self.finished.emit()
@@ -30,11 +30,11 @@ class StopRecordingWorker(QObject):
     rec = reco.Recorder()
     text_signal = pyqtSignal(str)
 
-    def __init__(self, editor) -> None:
+    def __init__(self: Any, editor: QPlainTextEdit) -> None:
         super(StopRecordingWorker, self).__init__()
         self.editor = editor
 
-    def run(self) -> str:
+    def run(self: Any) -> str:
         """Run stop recording task."""
         self.text = rec.stop_recording()
 
@@ -162,7 +162,7 @@ class Window(QMainWindow):
         self.aboutAction = QAction("About", self)
         self.aboutAction.triggered.connect(self.AboutFunction)
 
-    def updateEditor(self, text):
+    def updateEditor(self: Any, text: Any) -> None:
         """Append speech recognition text to the editor"""
         self.editor.appendPlainText(text)
         self.micButton.setEnabled(True)

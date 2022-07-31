@@ -1,4 +1,5 @@
 from http.client import RemoteDisconnected
+from typing import Any
 
 import speech_recognition as sr
 
@@ -11,7 +12,7 @@ unknow_value_errors = 0
 remote_errors = 0
 
 
-def recognize(audio, lang="en-US") -> str:
+def recognize(audio: Any, lang="en-US") -> str: # NOQA
     """
     Calls google speech recognition API.
 
@@ -43,7 +44,7 @@ def recognize(audio, lang="en-US") -> str:
             return "Remote Disconnected, verify your connection"
 
 
-def main(file_path, file_duration) -> str:
+def main(file_path: Any, file_duration: Any) -> str:
     """
     Returns the text result
 
