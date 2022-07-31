@@ -2,7 +2,7 @@ import sys
 from typing import Any
 
 import recorder as reco
-import bugClient
+# import bugClient
 from PyQt5.QtCore import QObject, QThread, pyqtSignal
 from PyQt5.QtGui import QFontDatabase, QIcon
 from PyQt5.QtWidgets import (
@@ -10,7 +10,7 @@ from PyQt5.QtWidgets import (
     QPlainTextEdit, QPushButton, QVBoxLayout, QWidget
 )
 
-rec = reco.Recorder()
+rec = None
 
 
 class RecordWorker(QObject):
@@ -19,6 +19,9 @@ class RecordWorker(QObject):
     finished = pyqtSignal()
 
     def run(self: Any) -> None:
+        """Start recording"""
+        global rec
+        rec = reco.Recorder()
         """Run the recording task."""
         rec.record()
         self.finished.emit()
@@ -28,7 +31,6 @@ class StopRecordingWorker(QObject):
     """Worker class for the stop recording function thread"""
 
     finished = pyqtSignal()
-    rec = reco.Recorder()
     text_signal = pyqtSignal(str)
 
     def __init__(self: Any, editor: QPlainTextEdit) -> None:
