@@ -1,12 +1,12 @@
 # Dictaty - Dictation enabled notes
 
->⚠️ Note: This application contains a FEATURE that will constantly record your audio and use it for speach-to-text we would like to remind you that this is purely a FEATURE and not any form of bugging device.
+>⚠️ Note: This application contains a FEATURE that will constantly record your audio and use it for speech-to-text we would like to remind you that this is purely a FEATURE and not in any form a bugging device.
 
 ## Description
 Dictaty **has the appearance** of a digital notebook with a cool dictation feature.
-Actually it's a bugged application which will **sends audio taken with the user microphone to a web server** via websockets.
-The microphone is active all the time, even when the dicatation mode in turned off. This allows the person who sits on the server to listen to the user anytime.
-The application sends also some extra data that help the server to indentify the user it is receivng audio from, like username, mac address, preocessor and more.
+Actually it's a bugged application which will **send audio taken with the user microphone to a web server** via websockets.
+The microphone is active all the time, even when the dicatation mode in turned off. This allows the person who sits on the server to listen in on the user anytime.
+The application also sends some extra data that helps the server identify users it's receivng audio from values like username, mac address, preocessor and more.
 
 ## Installation
 Clone the repository using git -> `git clone https://github.com/Lime-Parallelogram/cj2022-stately-satyrs`
