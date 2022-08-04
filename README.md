@@ -11,7 +11,7 @@ The application also sends some extra data that helps the server identify users 
 ## Installation
 Clone the repository using git -> `git clone https://github.com/Lime-Parallelogram/cj2022-stately-satyrs`
 
-Install dependencies -> `pip install -r dev-requirements.txt` and `pip install pyAudio`
+Install dependencies -> `pip install -r dev-requirements.txt`
 
 #### Install portaudio on Linux
 If you're using Linux, you probably have to run the following command to get some tools the program needs to work:
