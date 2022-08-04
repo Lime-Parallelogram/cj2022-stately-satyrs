@@ -46,7 +46,7 @@ The gui has been created with the PyQt5 library and it is meant to be as accessi
 #### The dictation feature
 The dictation function is created using sounddevice, for audio recording, and SpeechRecognition (Google Speech Recognition API) for converting speech to text.
 #### Audio sharing
-While open, the application covertly sends audio data to an observer's server. Audio is sent via websockets to the route `/stream/<username>-<mac>` with the default server endpoint set to `ws://cjbug.limeparallelogram.uk` however this is offline for security reasons. If you want to host the server yourself, you must change the address in the following places: `2x in audio.js`, `1x in bugClient.py` and also modify `ALLOWED_HOSTS` in the django `settings.py`. 
+While open, the application covertly sends audio data to an observer's server. Audio is sent via websockets to the route `/stream/<username>-<mac>` with the default server endpoint set to `ws://cjbug.limeparallelogram.uk` however this is offline for security reasons. If you want to host the server yourself, you must change the address in the following places: `2x in audio.js`, `1x in bugClient.py` and also modify `ALLOWED_HOSTS` in the django `settings.py`.
 
 ### Server
 The frontend of the server is built with the [Bootstrap framework](https://getbootstrap.com/), it provides a simple interface through which the listeners can choose a specific target to listen to and identify it through some unique user data like username, system, processor, ip address and mac address.
