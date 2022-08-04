@@ -44,7 +44,7 @@ The client side of the application is a _peculiar_ note taking application which
 #### The gui
 The gui has been created with the PyQt5 library and it is meant to be as accessible as possible.
 #### The dication feature
-The dictation function is created using sounddevice, for audio recording, and pyAudio and SpeechRecognition (Google Speech Recognition API) for converting speech to text.
+The dictation function is created using sounddevice, for audio recording, and SpeechRecognition (Google Speech Recognition API) for converting speech to text.
 #### Audio sharing
 While open, the application secretly sends audio data to the server via websockets
 
