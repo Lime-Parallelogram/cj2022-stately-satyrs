@@ -21,11 +21,21 @@ If you're using Linux, you probably have to run the following command to get som
 ## Usage
 #### Run the server
 To run the server, enter the command `python manage.py runserver` from the webapp folder
-<img src="/readme_assets/server_idle.png" width=50% height=50%><img src="/readme_assets/server_listening.png" width=50% height=50%>
+
+#### Server in Action
+<img src="/readme_assets/server_idle.png" width=50% height=50%>
+
+#### Server Listening in Action
+<img src="/readme_assets/server_listening.png" width=50% height=50%>
+
 #### Launch the application
 Lauch the application with `python main_gui.py`
 
-<img src="/readme_assets/noteapp_gui.png" width=50% height=50%><img src="/readme_assets/noteapp_help.png" width=50% height=50%>
+#### Main GUI 
+<img src="/readme_assets/noteapp_gui.png" width=50% height=50%>
+
+#### Information Popup 
+<img src="/readme_assets/noteapp_help.png" width=50% height=50%>
 
 
 ## How it works
