@@ -31,10 +31,10 @@ To run the server, enter the command `python manage.py runserver` from the webap
 #### Launch the application
 Lauch the application with `python main_gui.py`
 
-#### Main GUI 
+#### Main GUI
 <img src="/readme_assets/noteapp_gui.png" width=50% height=50%>
 
-#### Information Popup 
+#### Information Popup
 <img src="/readme_assets/noteapp_help.png" width=50% height=50%>
 
 
